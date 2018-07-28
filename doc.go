@@ -36,7 +36,7 @@ type Store interface {
 	// Get retrieves a new value by key and unmarshals it to v, or returns false if
 	// not found.
 	// Err is non-nil if key was not found, or in case of failure.
-	Get(ctx context.Context, key interface{}, v json.Unmarshaler) (ok bool, err error)
+	Get(ctx context.Context, k string, v json.Unmarshaler) (ok bool, err error)
 
 	// GetAll unmarshals to c every item in the store.
 	// Err is non-nil in case of failure.
@@ -44,30 +44,30 @@ type Store interface {
 
 	// Add assigns the given value to the given key if it doesn't exist already.
 	// Err is non-nil if key was already present, or in case of failure.
-	Add(ctx context.Context, key interface{}, v json.Marshaler) error
+	Add(ctx context.Context, k string, v json.Marshaler) error
 
 	// Set idempotently assigns the given value to the given key.
 	// Err is non-nil in case of failure.
-	Set(ctx context.Context, key interface{}, v json.Marshaler) error
+	Set(ctx context.Context, k string, v json.Marshaler) error
 
 	// SetWithTimeout assigns the given value to the given key, possibly
 	// overwriting. The assigned key will clear after timeout. The lifespan starts
 	// when this function is called.
 	// Err is non-nil in case of failure.
-	SetWithTimeout(ctx context.Context, key interface{}, v json.Marshaler, timeout time.Duration) error
+	SetWithTimeout(ctx context.Context, k string, v json.Marshaler, timeout time.Duration) error
 
 	// SetWithDeadline assigns the given value to the given key, possibly overwriting.
 	// The assigned key will clear after deadline.
 	// Err is non-nil in case of failure.
-	SetWithDeadline(ctx context.Context, key interface{}, v json.Marshaler, deadline time.Time) error
+	SetWithDeadline(ctx context.Context, k string, v json.Marshaler, deadline time.Time) error
 
 	// Update assigns the given value to the given key, if it exists.
 	// Err is non-nil if key was not found, or in case of failure.
-	Update(ctx context.Context, key interface{}, v json.Marshaler) error
+	Update(ctx context.Context, k string, v json.Marshaler) error
 
 	// Delete removes a key and its value from the store.
 	// Err is non-nil if key was not found, or in case of failure.
-	Delete(ctx context.Context, key interface{}) error
+	Delete(ctx context.Context, k string) error
 
 	// Ping returns a non-nil error if the Store is not healthy or if the
 	// connection to the persistence is compromised.
