@@ -23,10 +23,6 @@ var (
 	// ErrNoRows is returned when performing an operation on a target that doesn't
 	// exist (Update, Delete)
 	ErrNoRows = errors.New("no values in result set")
-
-	// ErrKeyExists is returned when executing Add with a key which is already in
-	// the store.
-	ErrKeyExists = errors.New("the key already exists")
 )
 
 // Store defines an interface for interacting with a key-value store able to
@@ -42,9 +38,9 @@ type Store interface {
 	// Err is non-nil in case of failure.
 	GetAll(ctx context.Context, c Collection) error
 
-	// Add assigns the given value to the given key if it doesn't exist already.
-	// Err is non-nil if key was already present, or in case of failure.
-	Add(ctx context.Context, k string, v json.Marshaler) error
+	// Add assigns the given value to a new key, and returns the key.
+	// Err is non-nil in case of failure.
+	Add(ctx context.Context, v json.Marshaler) (k string, err error)
 
 	// Set idempotently assigns the given value to the given key.
 	// Err is non-nil in case of failure.
