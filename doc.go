@@ -15,23 +15,16 @@ package store // import "github.com/gokv/store"
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"time"
-)
-
-var (
-	// ErrNoRows is returned when performing an operation on a target that doesn't
-	// exist (Update, Delete)
-	ErrNoRows = errors.New("no values in result set")
 )
 
 // Store defines an interface for interacting with a key-value store able to
 // store JSON data in some form.
 type Store interface {
 
-	// Get retrieves a new value by key and unmarshals it to v, or returns false if
-	// not found.
-	// Err is non-nil if key was not found, or in case of failure.
+	// Get retrieves a new value by key and unmarshals it to v.
+	// Ok is false if the key was not found.
+	// Err is non-nil in case of failure.
 	Get(ctx context.Context, k string, v json.Unmarshaler) (ok bool, err error)
 
 	// GetAll unmarshals to c every item in the store.
@@ -58,12 +51,14 @@ type Store interface {
 	SetWithDeadline(ctx context.Context, k string, v json.Marshaler, deadline time.Time) error
 
 	// Update assigns the given value to the given key, if it exists.
-	// Err is non-nil if key was not found, or in case of failure.
-	Update(ctx context.Context, k string, v json.Marshaler) error
+	// Ok is false if the key was not found.
+	// Err is non-nil in case of failure.
+	Update(ctx context.Context, k string, v json.Marshaler) (ok bool, err error)
 
 	// Delete removes a key and its value from the store.
-	// Err is non-nil if key was not found, or in case of failure.
-	Delete(ctx context.Context, k string) error
+	// Ok is false if the key was not found.
+	// Err is non-nil in case of failure.
+	Delete(ctx context.Context, k string) (ok bool, err error)
 
 	// Ping returns a non-nil error if the Store is not healthy or if the
 	// connection to the persistence is compromised.
