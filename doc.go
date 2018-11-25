@@ -1,14 +1,13 @@
 /*
-Package store strives to define a portable interface for key-value store
-dependency injection.
+Package store defines a simple interface for key-value store dependency
+injection.
 
-Not all implementations are supposed to provide every method.
+Not all implementations are supposed to provide every method. More importantly,
+the consumers should declare their subset of required methods.
 
-The consumer is advised to define an interface with its own subset of required
-methods.
-
-This package mainly exists to document how the methods are supposed to be
-implemented.
+The Store interface is not meant to be used directly, but rather to document
+how the methods should be implemented. Every application will define a specific
+interface with its required methods only.
 */
 package store // import "github.com/gokv/store"
 
@@ -70,9 +69,10 @@ type Store interface {
 	Close() error
 }
 
-// New returns an unmarshaler for the Store to unmarshal the next fetched item into.
-// New allows a collection type (e.g. a slice) to be used as an argument
-// to a query (e.g. store.GetAll) to collect multiple results.
+// Collection defines a New method that will be called by the store to get the
+// variable to unmarshal the next fetched item into. The Collection interface
+// allows a collection type (e.g. a slice) to be used as an argument to a Store
+// method (e.g. GetAll) to collect multiple results.
 type Collection interface {
 	New() json.Unmarshaler
 }
