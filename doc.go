@@ -59,6 +59,13 @@ type Store interface {
 	// Err is non-nil in case of failure.
 	Delete(ctx context.Context, k string) (ok bool, err error)
 
+	// FindWord unmarshals to c every item matching the search in the given property.
+	// Err is non-nil in case of failure..
+	//
+	// The search value is expected as a list of space-separated words.
+	// The search returns items that case-insensitively match every complete word in the value.
+	FindWord(ctx context.Context, property, words string, c Collection) error
+
 	// Ping returns a non-nil error if the Store is not healthy or if the
 	// connection to the persistence is compromised.
 	Ping(ctx context.Context) error
